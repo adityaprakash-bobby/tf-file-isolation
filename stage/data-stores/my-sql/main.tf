@@ -2,6 +2,17 @@ provider "aws" {
     region = "ap-south-1"
 }
 
+terraform {
+    backend "s3" {
+        bucket         = "tf-state-lock"
+        region         = "ap-south-1"
+        key            = "stage/data-stores/my-sql/terraform.tfstate"
+
+        dynamodb_table = "tf-state-lock"
+        encrypt        = true
+    }
+}
+
 resource "aws_db_instance" "webserver" {
     identifier_prefix = "tf-webserver"
     engine = "mysql"
