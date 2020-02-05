@@ -19,12 +19,7 @@ resource "aws_launch_configuration" "webserver" {
     instance_type   = "t2.micro"
     security_groups = [aws_security_group.webserver.id]
 
-    user_data = <<-EOF
-                #!/bin/bash
-                echo "Hello World from $(hostname)!" > index.html
-                nohup busybox httpd -f -p ${var.server_port} &
-                EOF
-
+    user_data = data.template_file.user_data.rendered
     # Changes the way the tf handles resource deletion. Ensures a new LC is
     # created before deleting the current one in case of modiftications to LC.
     lifecycle {
@@ -146,4 +141,14 @@ data "aws_vpc" "default" {
 
 data "aws_subnet_ids" "default" {
     vpc_id = data.aws_vpc.default.id
+}
+
+data "template_file" "user_data" {
+    template_file = file("user-data.sh")
+
+    vars = {
+        server_port = var.server_port
+        db_address  = data.terraform_remote_state.db.outputs.db_address
+        db_port     = data.terraform_remote_state.db.outputs.db_port
+    }
 }
