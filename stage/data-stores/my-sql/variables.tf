@@ -1,4 +1,4 @@
-var "db_password" {
+variable "db_password" {
     type        = string
     description = "Password for the MySQL database test-database and user admin"
 }
