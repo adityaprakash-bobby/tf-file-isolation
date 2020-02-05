@@ -5,10 +5,11 @@ provider "aws" {
 # Define S3 backend
 terraform {
     backend "s3" {
-        bucket = "tf-state-lock"
-        key = "stage/services/web-cluster"
+        bucket         = "tf-state-lock"
+        region         = "ap-south-1"
+        key            = "stage/services/web-cluster/terraform.tfstate"
         dynamodb_table = "tf-state-lock"
-        encrypt = true
+        encrypt        = true
     }
 }
 
