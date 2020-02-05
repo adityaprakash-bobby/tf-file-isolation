@@ -13,7 +13,7 @@ terraform {
     }
 }
 
-resource "aws_db_instance" "webserver" {
+resource "aws_db_instance" "default" {
     identifier_prefix = "tf-webserver"
     engine = "mysql"
     allocated_storage = 10
@@ -22,4 +22,14 @@ resource "aws_db_instance" "webserver" {
     name = "test-database"
     username = "admin"
     password = var.db_password
+}
+
+data "terraform_remote_state" "db" {
+    backend = "s3"
+
+    config {
+        bucket = "tf-state-lock"
+        key    = "stage/data-stores/my-sql/terraform.tfstate"
+        region = "ap-south-1"
+    }
 }
