@@ -19,17 +19,7 @@ resource "aws_db_instance" "default" {
     allocated_storage = 10
     instance_class = "db.t2.micro"
     
-    name = "test-database"
+    name = "testdatabase"
     username = "admin"
     password = var.db_password
-}
-
-data "terraform_remote_state" "db" {
-    backend = "s3"
-
-    config {
-        bucket = "tf-state-lock"
-        key    = "stage/data-stores/my-sql/terraform.tfstate"
-        region = "ap-south-1"
-    }
 }
